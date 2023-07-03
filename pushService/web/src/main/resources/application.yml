@@ -1,0 +1,10 @@
+server:
+  port: 8089
+  servlet:
+    context-path: /personal-management
+
+spring:
+  application:
+    name: personal-management
+  profiles:
+    active: local
