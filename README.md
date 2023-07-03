@@ -9,10 +9,10 @@
 
 #### 安装教程
 
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
+1.  修改web模块下的application-local里的数据库配置
+2.  查询时不需要设置条件delete_flag=0,mybatis-plus实现了逻辑删除
+3.  在application里配置了context-path: /personal-management，测试时，每次请求如下http://localhost:8089/personal-management/test/操作
+4.  前端在跨域那里配置了
 #### 使用说明
 
 1.  xxxx
