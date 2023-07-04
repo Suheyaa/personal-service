@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qcby.personalmanagement.base.mapper.SysDeptMapper">
+
+    <resultMap id="SysDeptResult" type="com.qcby.personalmanagement.base.entity.SysDept">
+        <id property="id" column="id"/>
+        <result property="deptName" column="dept_name" />
+        <result property="leaderId" column="leader_id" />
+        <result property="deptStatus" column="dept_status" />
+        <result property="superiorId" column="superior_id" />
+        <result property="ancestors" column="ancestors" />
+        <result property="orderNum" column="order_num" />
+        <result property="createTime" column="create_time" />
+        <result property="updateTime" column="update_time" />
+        <result property="createBy" column="created_by" />
+        <result property="updateBy" column="updated_by" />
+        <result property="deleteFlag" column="delete_flag" />
+        <result property="revision" column="revision" />
+        <result property="userName" column="user_name" />
+        <result property="phone" column="phone"/>
+        <result property="email" column="email"/>
+
+    </resultMap>
+    <select id="selectDeptList" parameterType="com.qcby.personalmanagement.base.entity.SysDept" resultMap="SysDeptResult">
+        SELECT
+            d.id,
+            d.dept_name,
+            d.leader_id,
+            d.dept_status,
+            d.superior_id,
+            d.ancestors,
+            d.order_num,
+            d.create_time,
+            d.update_time,
+            d.created_by,
+            d.updated_by,
+            d.delete_flag,
+            d.revision,
+            u.user_name,
+            u.phone,
+            u.email
+        FROM
+            sys_dept AS d
+                LEFT JOIN
+            sys_user AS u
+            ON
+                d.leader_id = u.id
+        <where>
+            <if test="deptName != null and deptName != 0">
+                AND dept_name like concat('%', #{dept_name}, '%')
+            </if>
+            <if test="superiorId != null and superiorId != 0">
+                AND superior_id = #{superior_id}
+            </if>
+            <if test="deptStatus != null and deptStatus != 0">
+                AND dept_status = #{dept_status}
+            </if>
+
+        </where>
+        ORDER BY
+            d.superior_id, d.order_num
+    </select>
+
+    <delete id="deleteDeptById" parameterType="java.lang.Long">
+        update sys_dept set delete_flag = '1' where id = #{id}
+    </delete>
+
+    <select id="hasChildByDeptId" parameterType="Long" resultType="int">
+        select count(1) from sys_dept
+        where delete_flag = '0' and superior_id = #{id} limit 1
+    </select>
+
+    <select id="checkDeptExistUser" parameterType="Long" resultType="int">
+        select count(1) from sys_user where id = #{id} and delete_flag = '0'
+    </select>
+
+
+    <select id="selectDeptById" parameterType="java.lang.Long" resultMap="SysDeptResult">
+        select
+            d.id,
+            d.dept_name,
+            d.leader_id,
+            d.superior_id,
+            d.dept_status,
+            d.ancestors,
+            d.order_num,
+            d.delete_flag,
+            d.revision,
+            u.user_name,
+            u.phone,
+            u.email,
+            (select dept_name from sys_dept where id = d.superior_id)  superior_name
+        from sys_dept d
+                 LEFT JOIN
+             sys_user AS u
+             ON
+                 d.leader_id = u.id
+        where d.id = #{id}
+
+    </select>
+
+    <insert id="insertDept" parameterType="com.qcby.personalmanagement.base.entity.SysDept">
+        insert into sys_dept(
+        <if test="id != null and id != 0">id,</if>
+        <if test="superiorId != null and superiorId != 0">superior_id,</if>
+        <if test="deptName != null and deptName != ''">dept_name,</if>
+        <if test="ancestors != null and ancestors != ''">ancestors,</if>
+        <if test="orderNum != null">order_num,</if>
+        <if test="leaderId != null and leaderId != ''">leader_id,</if>
+        <if test="deptStatus != null">dept_status,</if>
+        <if test="createBy != null and createBy != ''">created_by,</if>
+        create_time
+        )values(
+        <if test="id != null and id != 0">#{id},</if>
+        <if test="superiorId != null and superiorId != 0">#{superiorId},</if>
+        <if test="deptName != null and deptName != ''">#{deptName},</if>
+        <if test="ancestors != null and ancestors != ''">#{ancestors},</if>
+        <if test="orderNum != null">#{orderNum},</if>
+        <if test="leaderId != null and leaderId != ''">#{leaderId},</if>
+        <if test="deptStatus != null">#{deptStatus},</if>
+        <if test="createBy != null and createBy != ''">#{createBy},</if>
+        sysdate()
+        )
+    </insert>
+
+    <update id="updateDept" parameterType="com.qcby.personalmanagement.base.entity.SysDept">
+        update sys_dept
+        <set>
+            <if test="id != null and id != 0">id = #{id},</if>
+            <if test="deptName != null and deptName != ''">dept_name = #{deptName},</if>
+            <if test="ancestors != null and ancestors != ''">ancestors = #{ancestors},</if>
+            <if test="orderNum != null">order_num = #{orderNum},</if>
+            <if test="leaderId != null">leader_id = #{leaderId},</if>
+            <if test="deptStatus != null and deptStatus != ''">dept_status = #{deptStatus},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>
