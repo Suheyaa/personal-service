@@ -1,9 +1,9 @@
-package com.qcby.personalmanagement.web.service.impl;
+package com.qcby.personalmanagement.base.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.qcby.personalmanagement.web.mapper.RoleBusinessMapper;
-import com.qcby.personalmanagement.web.po.RoleBusinessPO;
-import com.qcby.personalmanagement.web.service.RoleBusinessService;
+import com.qcby.personalmanagement.base.mapper.RoleBusinessMapper;
+import com.qcby.personalmanagement.base.po.RoleBusinessPO;
+import com.qcby.personalmanagement.base.service.RoleBusinessService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

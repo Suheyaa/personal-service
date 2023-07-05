@@ -1,12 +1,10 @@
-package com.qcby.personalmanagement.web.service;
+package com.qcby.personalmanagement.base.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.qcby.personalmanagement.web.dto.RoleAndBusinessDTO;
-import com.qcby.personalmanagement.web.dto.RoleDTO;
-import com.qcby.personalmanagement.web.param.RoleQueryParam;
-import com.qcby.personalmanagement.web.po.RolePO;
-import com.qcby.personalmanagement.web.vo.RoleVO;
-import org.apache.ibatis.annotations.Param;
+import com.qcby.personalmanagement.base.dto.RoleAndBusinessDTO;
+import com.qcby.personalmanagement.base.param.RoleQueryParam;
+import com.qcby.personalmanagement.base.po.RolePO;
+import com.qcby.personalmanagement.base.vo.RoleVO;
 
 import java.util.List;
 

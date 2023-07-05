@@ -1,10 +1,10 @@
 package com.qcby.personalmanagement.web.controller;
 
 import com.qcby.framework.common.pojo.Result;
-import com.qcby.personalmanagement.web.dto.RoleAndBusinessDTO;
-import com.qcby.personalmanagement.web.param.RoleQueryParam;
-import com.qcby.personalmanagement.web.service.IRoleService;
-import com.qcby.personalmanagement.web.vo.RoleVO;
+import com.qcby.personalmanagement.base.dto.RoleAndBusinessDTO;
+import com.qcby.personalmanagement.base.param.RoleQueryParam;
+import com.qcby.personalmanagement.base.service.IRoleService;
+import com.qcby.personalmanagement.base.vo.RoleVO;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

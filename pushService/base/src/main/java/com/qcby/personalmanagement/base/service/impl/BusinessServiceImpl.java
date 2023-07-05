@@ -1,4 +1,4 @@
-package com.qcby.personalmanagement.web.service.impl;
+package com.qcby.personalmanagement.base.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -6,13 +6,12 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.qcby.personalmanagement.web.dto.BusinessDTO;
-import com.qcby.personalmanagement.web.mapper.BusinessMapper;
-import com.qcby.personalmanagement.web.mapper.RoleBusinessMapper;
-import com.qcby.personalmanagement.web.po.BusinessPO;
-import com.qcby.personalmanagement.web.service.IBusinessService;
-import com.qcby.personalmanagement.web.vo.BusinessVO;
-import org.apache.ibatis.annotations.Param;
+import com.qcby.personalmanagement.base.dto.BusinessDTO;
+import com.qcby.personalmanagement.base.mapper.BusinessMapper;
+import com.qcby.personalmanagement.base.mapper.RoleBusinessMapper;
+import com.qcby.personalmanagement.base.po.BusinessPO;
+import com.qcby.personalmanagement.base.service.IBusinessService;
+import com.qcby.personalmanagement.base.vo.BusinessVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +62,7 @@ public class BusinessServiceImpl extends ServiceImpl<BusinessMapper, BusinessPO>
     }
 
     @Override
-    public List<BusinessVO> Paging_query(@Param("pageIndex") Integer pageIndex, @Param("pageSize") Integer pageSize, BusinessDTO businessDTO) {
+    public List<BusinessVO> Paging_query(Integer pageIndex, Integer pageSize, BusinessDTO businessDTO) {
         Page<BusinessPO> page = new Page<>(pageIndex, pageSize);
         QueryWrapper<BusinessPO> queryWrapper = Wrappers.emptyWrapper();
         if (ObjectUtil.isNotNull(businessDTO.businessName)) {

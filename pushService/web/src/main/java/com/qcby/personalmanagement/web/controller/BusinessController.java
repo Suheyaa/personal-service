@@ -1,9 +1,9 @@
 package com.qcby.personalmanagement.web.controller;
 
 import com.qcby.framework.common.pojo.Result;
-import com.qcby.personalmanagement.web.dto.BusinessDTO;
-import com.qcby.personalmanagement.web.service.IBusinessService;
-import com.qcby.personalmanagement.web.vo.BusinessVO;
+import com.qcby.personalmanagement.base.dto.BusinessDTO;
+import com.qcby.personalmanagement.base.service.IBusinessService;
+import com.qcby.personalmanagement.base.vo.BusinessVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

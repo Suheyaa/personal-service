@@ -1,11 +1,12 @@
-package com.qcby.personalmanagement.web.dto;
+package com.qcby.personalmanagement.base.dto;
 
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
-public class RoleDTO {
+public class RoleAndBusinessDTO {
     /**
      * id
      */
@@ -31,4 +32,9 @@ public class RoleDTO {
      * 创建日期
      */
     public Date createDate;
+
+    /**
+     * 可以使用的业务的id
+     */
+    public List<Long> ids;
 }

@@ -1,4 +1,4 @@
-package com.qcby.personalmanagement.web.po;
+package com.qcby.personalmanagement.base.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;

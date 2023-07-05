@@ -1,4 +1,4 @@
-package com.qcby.personalmanagement.web.dto;
+package com.qcby.personalmanagement.base.dto;
 
 import lombok.Data;
 

@@ -1,13 +1,22 @@
-package com.qcby.personalmanagement.web.vo;
+package com.qcby.personalmanagement.base.po;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * @author 张吉祥
+ * @description business`
+ * create table `business
+ * @date 2023-06-30
+ */
 @Data
-public class BusinessVO {
+@TableName("sys_business")
+public class BusinessPO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -46,4 +55,29 @@ public class BusinessVO {
      * 创建时间
      */
     private LocalDateTime createTime;
+
+    /**
+     * 更新时间
+     */
+    private LocalDateTime updateTime;
+
+    /**
+     * 创建者
+     */
+    private String createBy;
+
+    /**
+     * 更新者
+     */
+    private String updateBy;
+
+    /**
+     * 删除标识#0：未删除，1：删除
+     */
+    private Integer deleteFlag;
+
+    /**
+     * 乐观锁版本号
+     */
+    private Integer revision;
 }

@@ -1,7 +1,7 @@
-package com.qcby.personalmanagement.web.service;
+package com.qcby.personalmanagement.base.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.qcby.personalmanagement.web.po.RoleBusinessPO;
+import com.qcby.personalmanagement.base.po.RoleBusinessPO;
 
 import java.util.List;
 

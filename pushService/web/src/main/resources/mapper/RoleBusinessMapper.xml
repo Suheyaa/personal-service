@@ -18,13 +18,4 @@
         </foreach>
     </delete>
 
-<!--    &lt;!&ndash; 定义插入语句 &ndash;&gt;-->
-<!--    <insert id="insertBatch">-->
-<!--        INSERT INTO sys_role_business (role_id, business_id)-->
-<!--        VALUES-->
-<!--        <foreach collection="list" item="item" separator=",">-->
-<!--            (#{item.column1}, #{item.column2})-->
-<!--        </foreach>-->
-<!--    </insert>-->
-
 </mapper>

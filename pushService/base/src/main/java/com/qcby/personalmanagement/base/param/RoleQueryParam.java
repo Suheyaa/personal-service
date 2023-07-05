@@ -1,7 +1,5 @@
-package com.qcby.personalmanagement.web.param;
+package com.qcby.personalmanagement.base.param;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.time.LocalDateTime;

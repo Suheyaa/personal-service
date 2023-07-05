@@ -1,4 +1,4 @@
-package com.qcby.personalmanagement.web.config;
+package com.qcby.personalmanagement.base.config;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;

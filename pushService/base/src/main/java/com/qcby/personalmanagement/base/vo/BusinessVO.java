@@ -1,24 +1,31 @@
-package com.qcby.personalmanagement.web.vo;
+package com.qcby.personalmanagement.base.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
-public class RoleVO {
+public class BusinessVO {
+
     private static final long serialVersionUID = 1L;
+
     /**
-     * 角色id
+     * 主键
      */
+    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
-     * 角色名称
+     * 是否可用#0:禁用#1:启用
      */
-    private String roleName;
+    private Integer status;
+
+    /**
+     * 系统名称
+     */
+    private String businessName;
 
     /**
      * 权限字符
@@ -26,22 +33,17 @@ public class RoleVO {
     private String permission;
 
     /**
-     * 角色状态(0停用，1正常)
+     * 路由地址
      */
-    private Integer status;
+    private String path;
 
     /**
-     * 备注
+     * 图标
      */
-    private String remark;
+    private String icon;
+
     /**
      * 创建时间
      */
     private LocalDateTime createTime;
-
-    /**
-     * 可用业务id
-     */
-    private List<Long> ids;
-
 }

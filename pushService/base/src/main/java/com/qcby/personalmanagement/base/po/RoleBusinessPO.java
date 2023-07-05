@@ -1,4 +1,4 @@
-package com.qcby.personalmanagement.web.po;
+package com.qcby.personalmanagement.base.po;
 
 import lombok.Data;
 
