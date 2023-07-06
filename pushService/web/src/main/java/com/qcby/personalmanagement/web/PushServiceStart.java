@@ -12,7 +12,7 @@ import org.springframework.context.annotation.ComponentScan;
  * @date 2023/04/03
  */
 @SpringBootApplication
-@MapperScan(basePackages = {"com.qcby.personalmanagement.base.mapper"})
+@MapperScan(basePackages = "com.qcby.personalmanagement.base.mapper")
 @ComponentScan(basePackages = "com.qcby.personalmanagement")
 public class PushServiceStart {
     public static void main(String[] args) {
