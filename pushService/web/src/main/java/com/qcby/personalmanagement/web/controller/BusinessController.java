@@ -32,7 +32,7 @@ public class BusinessController {
         return Result.getSuccessResult(businessService.update(businessDTO));
     }
 
-    @RequestMapping("/Paging_query")
+    @RequestMapping("/paging_query")
     public Result<List<BusinessVO>> Paging_query(Integer pageIndex, Integer pageSize, BusinessDTO businessDTO) {
         return Result.getSuccessResult(businessService.Paging_query(pageIndex,pageSize,businessDTO));
     }

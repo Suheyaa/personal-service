@@ -64,7 +64,7 @@ public class BusinessServiceImpl extends ServiceImpl<BusinessMapper, BusinessPO>
     @Override
     public List<BusinessVO> Paging_query(Integer pageIndex, Integer pageSize, BusinessDTO businessDTO) {
         Page<BusinessPO> page = new Page<>(pageIndex, pageSize);
-        QueryWrapper<BusinessPO> queryWrapper = Wrappers.emptyWrapper();
+        QueryWrapper<BusinessPO> queryWrapper = new QueryWrapper<>();
         if (ObjectUtil.isNotNull(businessDTO.businessName)) {
             queryWrapper.like("business_name", businessDTO.businessName);
         }
