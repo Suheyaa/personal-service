@@ -2,6 +2,8 @@ package com.qcby.personalmanagement.base.vo;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -14,7 +16,6 @@ public class BusinessVO {
     /**
      * 主键
      */
-    @TableId(type = IdType.ASSIGN_ID)
     private Long id;
 
     /**
@@ -25,6 +26,7 @@ public class BusinessVO {
     /**
      * 系统名称
      */
+
     private String businessName;
 
     /**
@@ -46,4 +48,5 @@ public class BusinessVO {
      * 创建时间
      */
     private LocalDateTime createTime;
+
 }

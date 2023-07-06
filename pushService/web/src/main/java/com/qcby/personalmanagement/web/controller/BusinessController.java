@@ -2,6 +2,7 @@ package com.qcby.personalmanagement.web.controller;
 
 import com.qcby.framework.common.pojo.Result;
 import com.qcby.personalmanagement.base.dto.BusinessDTO;
+import com.qcby.personalmanagement.base.po.BusinessPO;
 import com.qcby.personalmanagement.base.service.IBusinessService;
 import com.qcby.personalmanagement.base.vo.BusinessVO;
 import org.springframework.web.bind.annotation.*;
@@ -31,10 +32,28 @@ public class BusinessController {
     }
 
     @PostMapping("/paging_query/{pageIndex}/{pageSize}")
-    public Result<List<BusinessVO>> Paging_query(@PathVariable Integer pageIndex,@PathVariable Integer pageSize, @RequestBody BusinessDTO businessDTO) {
-        return Result.getSuccessResult(businessService.Paging_query(pageIndex,pageSize,businessDTO));
+    public Result<List<BusinessVO>> pagingQuery(@PathVariable Integer pageIndex, @PathVariable Integer pageSize, @RequestBody BusinessDTO businessDTO) {
+        return Result.getSuccessResult(businessService.Paging_query(pageIndex, pageSize, businessDTO));
     }
 
+    @RequestMapping("/get_counts")
+    public Result<Integer> getCounts() {
+        return Result.getSuccessResult(businessService.count());
+    }
+
+    @RequestMapping("/get_by_id")
+    public Result<BusinessVO> getById(Integer id) {
+        BusinessPO businessPO = this.businessService.getById(id);
+        BusinessVO businessVO = new BusinessVO();
+        businessVO.setId(businessPO.getId());
+        businessVO.setStatus(businessPO.getStatus());
+        businessVO.setBusinessName(businessPO.getBusinessName());
+        businessVO.setPermission(businessPO.getPermission());
+        businessVO.setPath(businessPO.getPath());
+        businessVO.setIcon(businessPO.getIcon());
+        businessVO.setCreateTime(businessPO.getCreateTime());
+        return Result.getSuccessResult(businessVO);
+    }
 }
 
 
