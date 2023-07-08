@@ -16,60 +16,42 @@ public class BusinessController {
     @Resource
     private IBusinessService businessService;
 
-    @RequestMapping("/insert")
+    @PostMapping("/insert")
     public Result<Integer> insert(@RequestBody BusinessDTO businessDTO) {
         return Result.getSuccessResult(businessService.insert(businessDTO));
     }
 
-    @RequestMapping("/delete")
-    public Result<Integer> delete(@RequestBody Long id) {
+    @PostMapping("/delete/{id}")
+    public Result<Integer> delete(@PathVariable Long id) {
         return Result.getSuccessResult(businessService.delete(id));
     }
 
-    @RequestMapping("/update")
+    @PostMapping("/update")
     public Result<Integer> update(@RequestBody BusinessDTO businessDTO) {
         return Result.getSuccessResult(businessService.update(businessDTO));
     }
 
-    @PostMapping("/paging_query/{pageIndex}/{pageSize}")
-    public Result<List<BusinessVO>> pagingQuery(@PathVariable Integer pageIndex, @PathVariable Integer pageSize, @RequestBody BusinessDTO businessDTO) {
-        return Result.getSuccessResult(businessService.Paging_query(pageIndex, pageSize, businessDTO));
+    @PostMapping("/list/{pageIndex}/{pageSize}")
+    public Result<List<BusinessVO>> list(@PathVariable Integer pageIndex, @PathVariable Integer pageSize, @RequestBody BusinessDTO businessDTO) {
+        return Result.getSuccessResult(businessService.list(pageIndex, pageSize, businessDTO));
     }
 
-    @RequestMapping("/get_counts")
+    @GetMapping("/getCounts")
     public Result<Integer> getCounts() {
         return Result.getSuccessResult(businessService.count());
     }
 
-    @RequestMapping("/get_by_id")
-    public Result<BusinessVO> getById(Integer id) {
-        BusinessPO businessPO = this.businessService.getById(id);
+    @GetMapping("/selectById/{id}")
+    public Result<BusinessVO> getById(@PathVariable Long id) {
+        BusinessPO businessPo = this.businessService.getById(id);
         BusinessVO businessVO = new BusinessVO();
-        businessVO.setId(businessPO.getId());
-        businessVO.setStatus(businessPO.getStatus());
-        businessVO.setBusinessName(businessPO.getBusinessName());
-        businessVO.setPermission(businessPO.getPermission());
-        businessVO.setPath(businessPO.getPath());
-        businessVO.setIcon(businessPO.getIcon());
-        businessVO.setCreateTime(businessPO.getCreateTime());
+        businessVO.setId(businessPo.getId());
+        businessVO.setStatus(businessPo.getStatus());
+        businessVO.setBusinessName(businessPo.getBusinessName());
+        businessVO.setPermission(businessPo.getPermission());
+        businessVO.setPath(businessPo.getPath());
+        businessVO.setIcon(businessPo.getIcon());
+        businessVO.setCreateTime(businessPo.getCreateTime());
         return Result.getSuccessResult(businessVO);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

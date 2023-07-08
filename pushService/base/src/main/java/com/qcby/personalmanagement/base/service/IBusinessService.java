@@ -12,5 +12,5 @@ public interface IBusinessService extends IService<BusinessPO> {
     public Integer delete(Long id);
     public Integer update(BusinessDTO businessDTO);
 
-    List<BusinessVO> Paging_query(Integer pageIndex, Integer pageSize, BusinessDTO businessDTO);
+    List<BusinessVO> list(Integer pageIndex, Integer pageSize, BusinessDTO businessDTO);
 }
