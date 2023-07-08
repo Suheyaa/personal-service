@@ -49,4 +49,18 @@ public interface ISysDeptService {
      * 修改部门
      */
     public boolean updateDept(SysDept dept);
+
+    /**
+     * 校验部门名称是否唯一
+     * @return
+     */
+    public boolean checkDeptNameUnique(SysDept dept);
+
+    /**
+     * 根据ID查询所有子部门（正常状态）
+     *
+     * @param id 部门ID
+     * @return 子部门数
+     */
+    public int selectNormalChildrenDeptById(Long id);
 }

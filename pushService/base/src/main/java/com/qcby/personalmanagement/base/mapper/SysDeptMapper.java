@@ -2,6 +2,7 @@ package com.qcby.personalmanagement.base.mapper;
 
 import com.qcby.personalmanagement.base.entity.SysDept;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -52,5 +53,20 @@ public interface SysDeptMapper {
      */
     public int updateDept(SysDept dept);
 
+    /**
+     * 校验部门名称是否唯一
+     * @param deptName
+     * @param parentId
+     * @return
+     */
+    public SysDept checkDeptNameUnique(String deptName,  Long parentId);
+
+    /**
+     * 根据ID查询所有子部门（正常状态）
+     *
+     * @param id 部门ID
+     * @return 子部门数
+     */
+    public int selectNormalChildrenDeptById(Long id);
 
 }

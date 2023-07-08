@@ -27,7 +27,7 @@ public class TestController {
 
 
     @RequestMapping("/add/{name}")
-    public Result<String>add(@PathVariable(name = "name")String name){
+    public Result<String> add(@PathVariable(name = "name")String name){
         Test test=new Test();
         test.setName(name);
         boolean save = iTestService.save(test);
