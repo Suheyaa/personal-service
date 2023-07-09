@@ -4,6 +4,7 @@ import com.qcby.framework.common.pojo.Result;
 import com.qcby.personalmanagement.base.entity.Test;
 import com.qcby.personalmanagement.base.service.ITestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,7 +26,6 @@ public class TestController {
     @Resource
     private ITestService iTestService;
 
-
     @RequestMapping("/add/{name}")
     public Result<String> add(@PathVariable(name = "name")String name){
         Test test=new Test();
@@ -33,7 +33,5 @@ public class TestController {
         boolean save = iTestService.save(test);
         return new Result<String>(0,save?"成功":"失败","200");
     }
-
-
 
 }

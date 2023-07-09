@@ -13,7 +13,9 @@ import org.springframework.context.annotation.ComponentScan;
  */
 @SpringBootApplication
 @MapperScan(basePackages = "com.qcby.personalmanagement.base.mapper")
-@ComponentScan(basePackages = "com.qcby.personalmanagement")
+@ComponentScan(basePackages = "com.qcby.personalmanagement.base.config")
+@ComponentScan(basePackages = "com.qcby.personalmanagement.base.service")
+@ComponentScan(basePackages = "com.qcby.personalmanagement.web.controller")
 public class PushServiceStart {
     public static void main(String[] args) {
         SpringApplication.run(PushServiceStart.class, args);

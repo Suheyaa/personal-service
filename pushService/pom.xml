@@ -20,7 +20,7 @@
         <fastjson.version>1.2.73</fastjson.version>
         <xxl-job-core.version>2.3.0</xxl-job-core.version>
         <redisson.version>3.17.4</redisson.version>
-        <hutool.version>5.4.0</hutool.version>
+        <hutool.version>5.8.11</hutool.version>
         <mybatis-plus.version>3.4.2</mybatis-plus.version>
         <redisson.version>3.17.4</redisson.version>
         <redisson-start.version>3.17.4</redisson-start.version>
@@ -31,6 +31,7 @@
 
     <dependencyManagement>
         <dependencies>
+
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
@@ -91,12 +92,12 @@
                 <artifactId>mysql-connector-j</artifactId>
                 <version>${mysql-version}</version>
             </dependency>
-
             <dependency>
                 <groupId>com.qcby</groupId>
                 <artifactId>push-service-common</artifactId>
                 <version>${push-service-common.version}</version>
             </dependency>
+
         </dependencies>
     </dependencyManagement>
 
