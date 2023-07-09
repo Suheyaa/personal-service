@@ -2,13 +2,16 @@ package com.qcby.personalmanagement.web.controller;
 
 import com.qcby.framework.common.pojo.Result;
 import com.qcby.personalmanagement.base.dto.RoleAndBusinessDTO;
-import com.qcby.personalmanagement.base.param.RoleQueryParam;
 import com.qcby.personalmanagement.base.service.IRoleService;
+import com.qcby.personalmanagement.base.vo.BusinessVO;
 import com.qcby.personalmanagement.base.vo.RoleVO;
+import com.qcby.personalmanagement.web.param.RoleQueryParam;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -35,7 +38,7 @@ public class RoleController {
      * @return {@link Result}<{@link Boolean}>
      */
     @RequestMapping("/batch_deletion")
-    public Result<Integer> batchDeletion(List<Long> ids) {
+    public Result<Integer> batchDeletion(@RequestBody List<Long> ids) {
         return Result.getSuccessResult(roleService.batchDeletion(ids));
     }
 
@@ -57,7 +60,7 @@ public class RoleController {
      * @return {@link Result}<{@link Integer}>
      */
     @RequestMapping("/delete")
-    public Result<Integer> deleteRole(Long id) {
+    public Result<Integer> deleteRole(@RequestBody Long id) {
         return Result.getSuccessResult(roleService.deleteRole(id));
     }
 
@@ -68,8 +71,8 @@ public class RoleController {
      * @return {@link Result}<{@link List}<{@link RoleVO}>>
      */
     @RequestMapping("/paging_query")
-    public Result<List<RoleVO>> pagingQuery(RoleQueryParam roleQueryParam) {
-        return Result.getSuccessResult(roleService.pagingQuery(roleQueryParam));
+    public Result<List<RoleVO>> pagingQuery(@RequestBody RoleQueryParam roleQueryParam) {
+        return Result.getSuccessResult(roleService.pagingQuery(roleQueryParam.toRoleQuery()));
     }
 
 
@@ -86,4 +89,25 @@ public class RoleController {
         return Result.getSuccessResult(roleService.changeStatus(id, status));
     }
 
+    /**
+     * 通过角色id查询业务
+     *
+     * @param id     id
+     * @return {@link Result}<{@link Boolean}>
+     */
+    @RequestMapping("/query_business_by_roleId")
+    public Result<List<Long>> queryBusinessByRoleId(Long  id) {
+
+        return Result.getSuccessResult(roleService.queryBusinessByRoleId(id));
+    }
+
+    /**
+     * 出口
+     * 暂未完全实现
+     * @return {@link Result}<{@link List}<{@link BusinessVO}>>
+     */
+    @RequestMapping("/export")
+    public Result<Boolean> export(@RequestBody List<Long> ids) throws IOException {
+        return Result.getSuccessResult(roleService.export(ids));
+    }
 }

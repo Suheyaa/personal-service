@@ -1,26 +1,32 @@
 package com.qcby.personalmanagement.base.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.converters.DefaultConverterLoader;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qcby.personalmanagement.base.dto.RoleAndBusinessDTO;
+import com.qcby.personalmanagement.base.dto.RoleQuery;
 import com.qcby.personalmanagement.base.mapper.RoleMapper;
-import com.qcby.personalmanagement.base.param.RoleQueryParam;
 import com.qcby.personalmanagement.base.po.RoleBusinessPO;
 import com.qcby.personalmanagement.base.po.RolePO;
 import com.qcby.personalmanagement.base.service.IRoleService;
 import com.qcby.personalmanagement.base.service.RoleBusinessService;
+import com.qcby.personalmanagement.base.vo.BusinessVO;
 import com.qcby.personalmanagement.base.vo.RoleVO;
+import org.junit.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.util.List;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -97,7 +103,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements 
     }
 
     @Override
-    public Integer batchDeletion(@RequestBody List<Long> ids) {
+    public Integer batchDeletion(List<Long> ids) {
         // 删除role表数据
         boolean removeRole = this.removeByIds(ids);
         // 级联删除该角色在role_business对应的权限数据
@@ -106,31 +112,42 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements 
     }
 
     @Override
-    public List<RoleVO> pagingQuery(RoleQueryParam roleQueryParam) {
-        Page<RolePO> page = new Page<>(roleQueryParam.getPageIndex(), roleQueryParam.getPageSize());
-        QueryWrapper<RolePO> queryWrapper = Wrappers.emptyWrapper();
-        if (ObjectUtil.isNotNull(roleQueryParam.getRoleName())) {
-            queryWrapper.like("roleName", roleQueryParam.getRoleName());
+    public List<RoleVO> pagingQuery(RoleQuery roleQuery) {
+        Page<RolePO> page = new Page<>(roleQuery.getPageIndex(), roleQuery.getPageSize());
+        QueryWrapper<RolePO> queryWrapper = new QueryWrapper<>();
+        if (ObjectUtil.isNotNull(roleQuery.getRoleName())) {
+            queryWrapper.like("role_name", roleQuery.getRoleName());
         }
-        if (ObjectUtil.isNotNull(roleQueryParam.getPermission())) {
-            queryWrapper.eq("permission", roleQueryParam.getPermission());
+        if (ObjectUtil.isNotNull(roleQuery.getPermission())) {
+            queryWrapper.eq("permission", roleQuery.getPermission());
         }
-        if (ObjectUtil.isNotNull(roleQueryParam.getStatus())) {
-            queryWrapper.eq("status", roleQueryParam.getStatus());
+        if (ObjectUtil.isNotNull(roleQuery.getStatus())) {
+            queryWrapper.eq("status", roleQuery.getStatus());
         }
-        if (ObjectUtil.isNotNull(roleQueryParam.getCreateTimeEnd()) && ObjectUtil.isNotNull(roleQueryParam.getCreateTimeEnd())){
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            String formatStart = sdf.format(roleQueryParam.getCreateTimeStart());
-            String formatEnd = sdf.format(roleQueryParam.getCreateTimeEnd());
-            queryWrapper.ge("createTime",formatStart);
-            queryWrapper.le("createTime",formatEnd);
+        if (ObjectUtil.isNotNull(roleQuery.getCreateTimeEnd()) && ObjectUtil.isNotNull(roleQuery.getCreateTimeEnd())) {
+            String formatStart = roleQuery.getCreateTimeStart().format(DateTimeFormatter.ISO_DATE_TIME);
+            String formatEnd = roleQuery.getCreateTimeEnd().format(DateTimeFormatter.ISO_DATE_TIME);
+            queryWrapper.ge("create_time", formatStart);
+            queryWrapper.le("create_time", formatEnd);
         }
-        // 将PO转为VO最后化为list
-        return baseMapper.selectPage(page, queryWrapper).convert((RolePO) -> {
-            RoleVO roleVO = new RoleVO();
-            BeanUtils.copyProperties(RolePO, roleVO);
-            return roleVO;
-        }).getRecords();
+        // 得到对应的po
+        List<RolePO> rolePOS = baseMapper.selectPage(page, queryWrapper).getRecords();
+        // 所有角色的id
+        List<Long> ids = rolePOS.stream().map(RolePO::getId).collect(Collectors.toList());
+        // 得到这些角色对应的权限id，然后转为map方便后面使用
+        List<RoleBusinessPO> roleBusinessPOS = roleBusinessService.queryBusinessByRoleIds(ids);
+        Map<Long,List<Long>> map = new HashMap<>();
+        roleBusinessPOS.forEach(po->{
+            map.computeIfAbsent(po.getRoleId(), k -> new ArrayList<>()).add(po.getBusinessId());
+        });
+        // po转vo并把对应的business_id塞进去
+        return rolePOS.stream().map(po->{
+           RoleVO roleVO = new RoleVO();
+           BeanUtils.copyProperties(po, roleVO);
+           roleVO.setIds(map.get(po.getId()));
+           return roleVO;
+        }).collect(Collectors.toList());
+        // 两次查表，不写mapper.xml
     }
 
 
@@ -141,5 +158,38 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements 
         rolePO.setStatus(status);
         return this.updateById(rolePO);
     }
+
+    @Override
+    public List<Long> queryBusinessByRoleId(Long roleId) {
+        return roleBusinessService.queryBusinessByRoleId(roleId);
+    }
+
+    @Override
+    public Boolean export(List<Long> ids) throws IOException {
+        List<RolePO> rolePOS = this.listByIds(ids);
+        // 将PO转为VO最后化为list
+        List<RoleVO> collect = rolePOS.stream().map((RolePO) -> {
+            RoleVO roleVO = new RoleVO();
+            BeanUtils.copyProperties(RolePO, roleVO);
+//            roleVO.setIds(roleBusinessService.queryBusinessByRoleId(roleVO.getId()));
+            return roleVO;
+        }).collect(Collectors.toList());
+        ArrayList<RoleVO> arrayList = new ArrayList<>(collect);
+        String fileName = System.getProperty("user.dir") + "\\base\\src\\main\\resources\\角色表" + System.currentTimeMillis() + ".xlsx";
+        File file = new File(fileName);
+        File parentDir = file.getParentFile();
+        if (!parentDir.exists()) {
+            boolean created = parentDir.mkdirs();
+            if (!created) {
+                System.out.println("无法创建路径。");
+            }
+        }
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        EasyExcel.write(fileName, RoleVO.class).sheet("模板").doWrite(arrayList);
+        return true;
+    }
+
 
 }

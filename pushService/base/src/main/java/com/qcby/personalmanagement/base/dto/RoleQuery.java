@@ -1,19 +1,12 @@
-package com.qcby.personalmanagement.base.param;
+package com.qcby.personalmanagement.base.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Data;
-
 import java.time.LocalDateTime;
-
-/**
- * 角色查询参数
- *
- * @author 张吉祥
- * @date 2023/07/05
- */
 @Data
-public class RoleQueryParam {
+public class RoleQuery {
 
-    private static final long serialVersionUID = 1L;
     /**
      * 角色名称
      */
@@ -37,11 +30,13 @@ public class RoleQueryParam {
     /**
      * 创建时间起始
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime createTimeStart;
 
     /**
      * 创建时间结束
      */
+    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private LocalDateTime createTimeEnd;
 
     /**
@@ -53,5 +48,7 @@ public class RoleQueryParam {
      * 页面大小
      */
     private Integer pageSize;
+
+
 
 }
