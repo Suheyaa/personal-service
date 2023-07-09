@@ -8,26 +8,16 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qcby.personalmanagement.base.dto.BusinessDTO;
 import com.qcby.personalmanagement.base.mapper.BusinessMapper;
 import com.qcby.personalmanagement.base.po.BusinessPO;
-import com.qcby.personalmanagement.base.service.BO.QueryBO;
 import com.qcby.personalmanagement.base.service.IBusinessService;
 import com.qcby.personalmanagement.base.vo.BusinessVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-
-import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class BusinessServiceImpl extends ServiceImpl<BusinessMapper, BusinessPO> implements IBusinessService {
-
-    @Resource
-    private ExecutorService executorService;
 
     @Override
     public Integer insert(BusinessDTO businessDTO) {
