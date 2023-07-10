@@ -1,7 +1,9 @@
 package com.qcby.personalmanagement.web.controller;
 
+import com.qcby.framework.common.pojo.PageResult;
 import com.qcby.framework.common.pojo.Result;
 import com.qcby.personalmanagement.base.dto.RoleAndBusinessDTO;
+import com.qcby.personalmanagement.base.po.RolePO;
 import com.qcby.personalmanagement.base.service.IRoleService;
 import com.qcby.personalmanagement.base.vo.BusinessVO;
 import com.qcby.personalmanagement.base.vo.RoleVO;
@@ -71,7 +73,7 @@ public class RoleController {
      * @return {@link Result}<{@link List}<{@link RoleVO}>>
      */
     @RequestMapping("/paging_query")
-    public Result<List<RoleVO>> pagingQuery(@RequestBody RoleQueryParam roleQueryParam) {
+    public Result<PageResult<RoleVO>> pagingQuery(@RequestBody RoleQueryParam roleQueryParam) {
         return Result.getSuccessResult(roleService.pagingQuery(roleQueryParam.toRoleQuery()));
     }
 
@@ -101,6 +103,19 @@ public class RoleController {
         return Result.getSuccessResult(roleService.queryBusinessByRoleId(id));
     }
 
+    /**
+     * 得到总数
+     *
+     * @return {@link Result}<{@link Integer}>
+     */
+    @RequestMapping("/get_counts")
+    public Result<Integer> getCounts() {
+        return Result.getSuccessResult(roleService.count());
+    }
+    @RequestMapping("/list")
+    public Result<List<RoleVO>> list() {
+        return Result.getSuccessResult(roleService.listRole());
+    }
     /**
      * 出口
      * 暂未完全实现

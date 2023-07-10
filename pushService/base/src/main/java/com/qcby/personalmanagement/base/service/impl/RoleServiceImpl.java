@@ -2,12 +2,11 @@ package com.qcby.personalmanagement.base.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.excel.EasyExcel;
-import com.alibaba.excel.converters.DefaultConverterLoader;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.qcby.framework.common.pojo.PageResult;
 import com.qcby.personalmanagement.base.dto.RoleAndBusinessDTO;
 import com.qcby.personalmanagement.base.dto.RoleQuery;
 import com.qcby.personalmanagement.base.mapper.RoleMapper;
@@ -15,16 +14,13 @@ import com.qcby.personalmanagement.base.po.RoleBusinessPO;
 import com.qcby.personalmanagement.base.po.RolePO;
 import com.qcby.personalmanagement.base.service.IRoleService;
 import com.qcby.personalmanagement.base.service.RoleBusinessService;
-import com.qcby.personalmanagement.base.vo.BusinessVO;
 import com.qcby.personalmanagement.base.vo.RoleVO;
-import org.junit.Test;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -117,7 +113,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements 
     }
 
     @Override
-    public List<RoleVO> pagingQuery(RoleQuery roleQuery) {
+    public PageResult<RoleVO> pagingQuery(RoleQuery roleQuery) {
         Page<RolePO> page = new Page<>(roleQuery.getPageIndex(), roleQuery.getPageSize());
         QueryWrapper<RolePO> queryWrapper = new QueryWrapper<>();
         if (!StringUtils.isBlank(roleQuery.getRoleName())) {
@@ -146,13 +142,18 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements 
             map.computeIfAbsent(po.getRoleId(), k -> new ArrayList<>()).add(po.getBusinessId());
         });
         // po转vo并把对应的business_id塞进去
-        return rolePOS.stream().map(po -> {
+        List<RoleVO> roleVOS = rolePOS.stream().map(po -> {
             RoleVO roleVO = new RoleVO();
             BeanUtils.copyProperties(po, roleVO);
             roleVO.setIds(map.get(po.getId()));
             return roleVO;
         }).collect(Collectors.toList());
         // 两次查表，不写mapper.xml
+        // 封装pageResult
+        PageResult<RoleVO> pageResult = new PageResult<>();
+        pageResult.setList(roleVOS);
+        pageResult.setTotal((long) roleVOS.size());
+        return pageResult;
     }
 
 
@@ -168,7 +169,23 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements 
     public List<Long> queryBusinessByRoleId(Long roleId) {
         return roleBusinessService.queryBusinessByRoleId(roleId);
     }
+    @Override
+    public List<RoleVO> listRole() {
+        List<RolePO> rolePOS = this.list();
+        List<RoleBusinessPO> roleBusinessPOS = roleBusinessService.list();
 
+        Map<Long, List<Long>> map = new HashMap<>();
+        roleBusinessPOS.forEach(po -> {
+            map.computeIfAbsent(po.getRoleId(), k -> new ArrayList<>()).add(po.getBusinessId());
+        });
+        // po转vo并把对应的business_id塞进去
+        return  rolePOS.stream().map(po -> {
+            RoleVO roleVO = new RoleVO();
+            BeanUtils.copyProperties(po, roleVO);
+            roleVO.setIds(map.get(po.getId()));
+            return roleVO;
+        }).collect(Collectors.toList());
+    }
     @Override
     public Boolean export(List<Long> ids) throws IOException {
         List<RolePO> rolePOS = this.listByIds(ids);

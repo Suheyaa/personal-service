@@ -14,7 +14,6 @@ import com.qcby.framework.common.exception.ServiceException;
 import com.qcby.framework.common.pojo.PageParam;
 import com.qcby.framework.common.pojo.PageResult;
 import com.qcby.framework.common.pojo.Result;
-import com.qcby.personalmanagement.base.config.IdGeneratorSnowflake;
 import com.qcby.personalmanagement.base.entity.dto.PostDTO;
 import com.qcby.personalmanagement.base.entity.po.PostPO;
 import com.qcby.personalmanagement.base.mapper.PostMapper;
@@ -36,8 +35,6 @@ import java.util.UUID;
 @Service
 public class PostServiceImpl extends ServiceImpl<PostMapper, PostPO> implements IPostService {
 
-    @Resource
-    private IdGeneratorSnowflake idGeneratorSnowflake;
 
     public LambdaQueryWrapper<PostPO> buildWrapper(PostDTO postDTO){
         LambdaQueryWrapper<PostPO> lqw = new LambdaQueryWrapper<PostPO>();
@@ -89,7 +86,6 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, PostPO> implements 
         int temp;
         PostPO postPO=BeanUtil.copyProperties(postDTO,PostPO.class);
         if(ObjectUtil.isNull(postDTO.getId())){
-            postPO.setId(idGeneratorSnowflake.snowflakeId());
             postPO.setCreateTime(new Date());
             postPO.setCreateBy("admin");
             temp=this.baseMapper.insert(postPO);
