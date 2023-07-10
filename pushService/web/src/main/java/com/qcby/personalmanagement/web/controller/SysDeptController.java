@@ -47,7 +47,7 @@ public class SysDeptController {
      * 删除部门
      */
 
-    @GetMapping("/delete")
+    @GetMapping("/delete/{id}")
     public Result<Boolean> deleteById(Long id){
         //存在下级部门
         if(deptService.hasChildByDeptId(id)){
@@ -65,7 +65,7 @@ public class SysDeptController {
     /**
      * 根据id查询部门信息
      */
-    @GetMapping("/selectById")
+    @GetMapping("/selectById/{id}")
     public SysDept selectById(Long id){
         SysDept dept = deptService.selectDeptById(id);
         return dept;
@@ -86,18 +86,18 @@ public class SysDeptController {
     /**
      * 修改部门
      */
-    @PostMapping("/update")
-    public Result<Boolean> update(@RequestBody SysDept dept){
-        Long deptId = dept.getId();
+    @PostMapping("/update/{id}")
+    public Result<Boolean> update(@RequestBody Long id){
+        SysDept dept = deptService.selectDeptById(id);
         if (!deptService.checkDeptNameUnique(dept))
         {
             throw new ServiceException("500","部门名称已存在");
         }
-        else if (dept.getSuperiorId().equals(deptId))
+        else if (dept.getSuperiorId().equals(id))
         {
             throw new ServiceException("500","上级部门不能是自己");
         }
-        else if (deptService.selectNormalChildrenDeptById(deptId) > 0)
+        else if (deptService.selectNormalChildrenDeptById(id) > 0)
         {
             throw new ServiceException("500","该部门包含未停用的子部门");
         }
