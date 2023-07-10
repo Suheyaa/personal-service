@@ -87,8 +87,8 @@ public class SysDeptController {
      * 修改部门
      */
     @PostMapping("/update/{id}")
-    public Result<Boolean> update(@RequestBody Long id){
-        SysDept dept = deptService.selectDeptById(id);
+    public Result<Boolean> update(@RequestBody SysDept dept){
+        Long id = dept.getId();
         if (!deptService.checkDeptNameUnique(dept))
         {
             throw new ServiceException("500","部门名称已存在");
