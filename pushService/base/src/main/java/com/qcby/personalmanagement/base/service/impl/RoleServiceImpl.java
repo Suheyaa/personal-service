@@ -133,6 +133,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements 
         }
         // 得到对应的po
         List<RolePO> rolePOS = baseMapper.selectPage(page, queryWrapper).getRecords();
+        if (rolePOS.isEmpty()){
+            return PageResult.empty();
+        }
         // 所有角色的id
         List<Long> ids = rolePOS.stream().map(RolePO::getId).collect(Collectors.toList());
         // 得到这些角色对应的权限id，然后转为map方便后面使用
