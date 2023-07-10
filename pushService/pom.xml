@@ -27,6 +27,7 @@
         <push-service-base.version>1.0-SNAPSHOT</push-service-base.version>
         <push-service-common.version>1.0-SNAPSHOT</push-service-common.version>
         <mysql-version>8.0.32</mysql-version>
+        <easyexcel.version>3.3.2</easyexcel.version>
     </properties>
 
     <dependencyManagement>
@@ -96,6 +97,12 @@
                 <groupId>com.qcby</groupId>
                 <artifactId>push-service-common</artifactId>
                 <version>${push-service-common.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>easyexcel-core</artifactId>
+                <version>${easyexcel.version}</version>
             </dependency>
 
         </dependencies>

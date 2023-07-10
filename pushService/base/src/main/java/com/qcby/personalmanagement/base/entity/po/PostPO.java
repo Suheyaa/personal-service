@@ -1,12 +1,11 @@
 package com.qcby.personalmanagement.base.entity.po;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
-import java.util.Date;
+
+import java.time.LocalDateTime;
+
 
 /**
  * 岗位PO
@@ -19,14 +18,28 @@ import java.util.Date;
 public class PostPO {
     @TableId(type = IdType.ASSIGN_ID)
     private Long id;
+
     private String postCode;
+
     private String postName;
+
     private Integer status;
+
     private String remark;
-    private Date createTime;
-    private Date updateTime;
+
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
+
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateTime;
+
+    @TableField(fill = FieldFill.INSERT)
     private String createBy;
+
+    @TableField(fill = FieldFill.INSERT_UPDATE)
     private String updateBy;
+
+
     @TableLogic
     private Integer deleteFlag;
     private Integer revision;

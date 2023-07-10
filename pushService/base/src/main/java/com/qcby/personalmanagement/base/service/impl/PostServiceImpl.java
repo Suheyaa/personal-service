@@ -1,8 +1,6 @@
 package com.qcby.personalmanagement.base.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.date.DatePattern;
-import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -19,12 +17,8 @@ import com.qcby.personalmanagement.base.entity.po.PostPO;
 import com.qcby.personalmanagement.base.mapper.PostMapper;
 import com.qcby.personalmanagement.base.service.IPostService;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * 岗位服务实现
@@ -86,12 +80,8 @@ public class PostServiceImpl extends ServiceImpl<PostMapper, PostPO> implements 
         int temp;
         PostPO postPO=BeanUtil.copyProperties(postDTO,PostPO.class);
         if(ObjectUtil.isNull(postDTO.getId())){
-            postPO.setCreateTime(new Date());
-            postPO.setCreateBy("admin");
             temp=this.baseMapper.insert(postPO);
         }else{
-            postPO.setUpdateTime(new Date());
-            postPO.setUpdateBy("admin");
             temp=this.baseMapper.updateById(postPO);
         }
         return temp>0;
