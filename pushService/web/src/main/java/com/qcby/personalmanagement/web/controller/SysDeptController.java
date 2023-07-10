@@ -86,7 +86,7 @@ public class SysDeptController {
     /**
      * 修改部门
      */
-    @PostMapping("/update/{id}")
+    @PostMapping("/update")
     public Result<Boolean> update(@RequestBody SysDept dept){
         Long id = dept.getId();
         if (!deptService.checkDeptNameUnique(dept))
