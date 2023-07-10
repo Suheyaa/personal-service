@@ -29,7 +29,7 @@ public class RoleController {
      * @return {@link Result}<{@link Integer}>
      */
     @RequestMapping("/insert")
-    public Result<Integer> insertRole(RoleAndBusinessDTO roleAndBusinessDTO) {
+    public Result<Integer> insertRole(@RequestBody RoleAndBusinessDTO roleAndBusinessDTO) {
         return Result.getSuccessResult(roleService.insertRole(roleAndBusinessDTO));
     }
 
@@ -51,7 +51,7 @@ public class RoleController {
      * @return {@link Result}<{@link Integer}>
      */
     @RequestMapping("/update")
-    public Result<Integer> updateRole(RoleAndBusinessDTO roleAndBusinessDTO) {
+    public Result<Integer> updateRole(@RequestBody RoleAndBusinessDTO roleAndBusinessDTO) {
         return Result.getSuccessResult(roleService.updateRole(roleAndBusinessDTO));
     }
 

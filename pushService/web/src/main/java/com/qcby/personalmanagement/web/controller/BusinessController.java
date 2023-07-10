@@ -5,10 +5,12 @@ import com.qcby.personalmanagement.base.dto.BusinessDTO;
 import com.qcby.personalmanagement.base.po.BusinessPO;
 import com.qcby.personalmanagement.base.service.IBusinessService;
 import com.qcby.personalmanagement.base.vo.BusinessVO;
+import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/business")
@@ -53,5 +55,15 @@ public class BusinessController {
         businessVO.setIcon(businessPo.getIcon());
         businessVO.setCreateTime(businessPo.getCreateTime());
         return Result.getSuccessResult(businessVO);
+    }
+    @GetMapping("/list_all")
+    public Result<List<BusinessVO>> listAll() {
+        List<BusinessPO> list = businessService.list();
+        List<BusinessVO> collect = list.stream().map((businessPO) -> {
+            BusinessVO businessVO = new BusinessVO();
+            BeanUtils.copyProperties(businessPO, businessVO);
+            return businessVO;
+        }).collect(Collectors.toList());
+        return Result.getSuccessResult(collect);
     }
 }
