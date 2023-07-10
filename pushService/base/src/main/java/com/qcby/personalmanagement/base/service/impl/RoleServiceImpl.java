@@ -4,6 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.converters.DefaultConverterLoader;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -50,13 +51,17 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements 
         Long roleId = rolePO.getId();
         // 在role_business表插入数据
         //     转为roleBusinessPO用于插入
-        List<RoleBusinessPO> collect = roleAndBusinessDTO.getIds().stream().map(e -> {
-            RoleBusinessPO roleBusinessPO = new RoleBusinessPO();
-            roleBusinessPO.setRoleId(roleId);
-            roleBusinessPO.setBusinessId(e);
-            return roleBusinessPO;
-        }).collect(Collectors.toList());
-        boolean saveRoleBusiness = roleBusinessService.saveBatch(collect);
+        boolean saveRoleBusiness = true;
+        // 判空，如果没有传ids则不需要在role_business表插入数据
+        if (ObjectUtil.isNotNull(roleAndBusinessDTO.getIds())) {
+            List<RoleBusinessPO> collect = roleAndBusinessDTO.getIds().stream().map(e -> {
+                RoleBusinessPO roleBusinessPO = new RoleBusinessPO();
+                roleBusinessPO.setRoleId(roleId);
+                roleBusinessPO.setBusinessId(e);
+                return roleBusinessPO;
+            }).collect(Collectors.toList());
+            saveRoleBusiness = roleBusinessService.saveBatch(collect);
+        }
         return saveRole && saveRoleBusiness ? 1 : 0;
     }
 
@@ -115,10 +120,10 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements 
     public List<RoleVO> pagingQuery(RoleQuery roleQuery) {
         Page<RolePO> page = new Page<>(roleQuery.getPageIndex(), roleQuery.getPageSize());
         QueryWrapper<RolePO> queryWrapper = new QueryWrapper<>();
-        if (ObjectUtil.isNotNull(roleQuery.getRoleName())) {
+        if (!StringUtils.isBlank(roleQuery.getRoleName())) {
             queryWrapper.like("role_name", roleQuery.getRoleName());
         }
-        if (ObjectUtil.isNotNull(roleQuery.getPermission())) {
+        if (!StringUtils.isBlank(roleQuery.getPermission())) {
             queryWrapper.eq("permission", roleQuery.getPermission());
         }
         if (ObjectUtil.isNotNull(roleQuery.getStatus())) {
@@ -136,16 +141,16 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements 
         List<Long> ids = rolePOS.stream().map(RolePO::getId).collect(Collectors.toList());
         // 得到这些角色对应的权限id，然后转为map方便后面使用
         List<RoleBusinessPO> roleBusinessPOS = roleBusinessService.queryBusinessByRoleIds(ids);
-        Map<Long,List<Long>> map = new HashMap<>();
-        roleBusinessPOS.forEach(po->{
+        Map<Long, List<Long>> map = new HashMap<>();
+        roleBusinessPOS.forEach(po -> {
             map.computeIfAbsent(po.getRoleId(), k -> new ArrayList<>()).add(po.getBusinessId());
         });
         // po转vo并把对应的business_id塞进去
-        return rolePOS.stream().map(po->{
-           RoleVO roleVO = new RoleVO();
-           BeanUtils.copyProperties(po, roleVO);
-           roleVO.setIds(map.get(po.getId()));
-           return roleVO;
+        return rolePOS.stream().map(po -> {
+            RoleVO roleVO = new RoleVO();
+            BeanUtils.copyProperties(po, roleVO);
+            roleVO.setIds(map.get(po.getId()));
+            return roleVO;
         }).collect(Collectors.toList());
         // 两次查表，不写mapper.xml
     }
