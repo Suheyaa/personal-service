@@ -22,5 +22,5 @@ public interface IRoleService extends IService<RolePO> {
     public List<RoleVO> listRole();
     public List<Long> queryBusinessByRoleId(Long roleId);
 
-    public Boolean export(List<Long> ids) throws IOException;
+    public String export(List<Long> ids) throws IOException;
 }

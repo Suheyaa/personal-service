@@ -14,8 +14,11 @@ import com.qcby.personalmanagement.base.po.RoleBusinessPO;
 import com.qcby.personalmanagement.base.po.RolePO;
 import com.qcby.personalmanagement.base.service.IRoleService;
 import com.qcby.personalmanagement.base.service.RoleBusinessService;
+import com.qcby.personalmanagement.base.vo.RoleExcelVO;
 import com.qcby.personalmanagement.base.vo.RoleVO;
+import org.junit.Test;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -30,7 +33,7 @@ import java.util.stream.Collectors;
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements IRoleService {
     @Resource
     private RoleBusinessService roleBusinessService;
-
+    String path="E:\\src\\";
 
     @Override
     public Integer insertRole(RoleAndBusinessDTO roleAndBusinessDTO) {
@@ -131,9 +134,11 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements 
             queryWrapper.ge("create_time", formatStart);
             queryWrapper.le("create_time", formatEnd);
         }
+        Page<RolePO> selectPage = baseMapper.selectPage(page, queryWrapper);
+        long total = selectPage.getTotal();
         // 得到对应的po
-        List<RolePO> rolePOS = baseMapper.selectPage(page, queryWrapper).getRecords();
-        if (rolePOS.isEmpty()){
+        List<RolePO> rolePOS = selectPage.getRecords();
+        if (rolePOS.isEmpty()) {
             return PageResult.empty();
         }
         // 所有角色的id
@@ -155,7 +160,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements 
         // 封装pageResult
         PageResult<RoleVO> pageResult = new PageResult<>();
         pageResult.setList(roleVOS);
-        pageResult.setTotal((long) roleVOS.size());
+        pageResult.setTotal(total);
         return pageResult;
     }
 
@@ -172,6 +177,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements 
     public List<Long> queryBusinessByRoleId(Long roleId) {
         return roleBusinessService.queryBusinessByRoleId(roleId);
     }
+
     @Override
     public List<RoleVO> listRole() {
         List<RolePO> rolePOS = this.list();
@@ -182,39 +188,54 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements 
             map.computeIfAbsent(po.getRoleId(), k -> new ArrayList<>()).add(po.getBusinessId());
         });
         // po转vo并把对应的business_id塞进去
-        return  rolePOS.stream().map(po -> {
+        return rolePOS.stream().map(po -> {
             RoleVO roleVO = new RoleVO();
             BeanUtils.copyProperties(po, roleVO);
             roleVO.setIds(map.get(po.getId()));
             return roleVO;
         }).collect(Collectors.toList());
     }
+
+    /**
+     * 导出
+     *
+     * @param ids 要导出的角色的id
+     * @return {@link String} 文件的地址
+     * @throws IOException ioexception
+     */
     @Override
-    public Boolean export(List<Long> ids) throws IOException {
+    public String export(List<Long> ids) throws IOException {
+        // 得到要导出的数据
         List<RolePO> rolePOS = this.listByIds(ids);
-        // 将PO转为VO最后化为list
-        List<RoleVO> collect = rolePOS.stream().map((RolePO) -> {
-            RoleVO roleVO = new RoleVO();
-            BeanUtils.copyProperties(RolePO, roleVO);
-//            roleVO.setIds(roleBusinessService.queryBusinessByRoleId(roleVO.getId()));
+        // 得到这些角色对应的权限id，然后转为map方便后面使用
+        List<RoleBusinessPO> roleBusinessPOS = roleBusinessService.queryBusinessByRoleIds(ids);
+        Map<Long, List<Long>> map = new HashMap<>();
+        roleBusinessPOS.forEach(po -> {
+            map.computeIfAbsent(po.getRoleId(), k -> new ArrayList<>()).add(po.getBusinessId());
+        });
+        // po转vo并把对应的business_id塞进去
+        ArrayList<RoleExcelVO> arrayList = rolePOS.stream().map(po -> {
+            RoleExcelVO roleVO = new RoleExcelVO();
+            BeanUtils.copyProperties(po, roleVO);
+            roleVO.setIds(map.get(po.getId()).toString());
             return roleVO;
-        }).collect(Collectors.toList());
-        ArrayList<RoleVO> arrayList = new ArrayList<>(collect);
-        String fileName = System.getProperty("user.dir") + "\\base\\src\\main\\resources\\角色表" + System.currentTimeMillis() + ".xlsx";
+        }).collect(Collectors.toCollection(ArrayList::new));
+        System.out.println(arrayList);
+
+        // 导出数据
+        // 生成路径及文件名
+        String fileName = path + System.currentTimeMillis() + ".xlsx";
+        // 判断父路径文件夹是否存在，不存在则创建
         File file = new File(fileName);
         File parentDir = file.getParentFile();
         if (!parentDir.exists()) {
-            boolean created = parentDir.mkdirs();
-            if (!created) {
-                System.out.println("无法创建路径。");
-            }
+            parentDir.mkdirs();
         }
+        // 判断文件是否存在，不存在则创建
         if (!file.exists()) {
             file.createNewFile();
         }
-        EasyExcel.write(fileName, RoleVO.class).sheet("模板").doWrite(arrayList);
-        return true;
+        EasyExcel.write(fileName, RoleExcelVO.class).sheet("模板").doWrite(arrayList);
+        return fileName;
     }
-
-
 }

@@ -8,11 +8,15 @@ import com.qcby.personalmanagement.base.service.IRoleService;
 import com.qcby.personalmanagement.base.vo.BusinessVO;
 import com.qcby.personalmanagement.base.vo.RoleVO;
 import com.qcby.personalmanagement.web.param.RoleQueryParam;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -122,7 +126,29 @@ public class RoleController {
      * @return {@link Result}<{@link List}<{@link BusinessVO}>>
      */
     @RequestMapping("/export")
-    public Result<Boolean> export(@RequestBody List<Long> ids) throws IOException {
-        return Result.getSuccessResult(roleService.export(ids));
+    public void export(@RequestBody List<Long> ids, HttpServletResponse response) throws IOException {
+        System.out.println(ids);
+        String filePath = roleService.export(ids);
+        System.out.println(filePath);
+        try {
+            //输入流，通过输入流将读取文件内容
+            FileInputStream fileInputStream = new FileInputStream(filePath);
+            //输出流，通过输出流将文件回写到浏览器，在浏览器展示图片
+            ServletOutputStream outputStream = response.getOutputStream();
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("Content-Disposition", "attachment; filename=角色表.xlsx");
+            response.setStatus(200);
+            int len = 0;
+            byte[] bytes = new byte[1024];
+            while ((len = fileInputStream.read(bytes)) > 0) {
+                outputStream.write(bytes, 0, len);
+            }
+            outputStream.flush();
+            //关闭流
+            fileInputStream.close();
+            outputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
