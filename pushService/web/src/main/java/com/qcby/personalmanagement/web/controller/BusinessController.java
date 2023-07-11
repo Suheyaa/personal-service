@@ -9,6 +9,11 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -65,5 +70,34 @@ public class BusinessController {
             return businessVO;
         }).collect(Collectors.toList());
         return Result.getSuccessResult(collect);
+    }
+
+    @PostMapping("/export")
+    public void export(@RequestBody List<Long> ids, HttpServletResponse response) throws IOException {
+        System.out.println(ids);
+        String filePath = businessService.export(ids);
+        System.out.println(filePath);
+        try {
+            //输入流，通过输入流将读取文件内容
+            FileInputStream fileInputStream = new FileInputStream(filePath);
+            //输出流，通过输出流将文件回写到浏览器，在浏览器展示图片
+            ServletOutputStream outputStream = response.getOutputStream();
+            response.setContentType("application/vnd.ms-excel");
+            response.setHeader("Content-Disposition", "attachment; filename=角色表.xlsx");
+            response.setStatus(200);
+            int len = 0;
+            byte[] bytes = new byte[1024];
+            while ((len = fileInputStream.read(bytes)) > 0) {
+                outputStream.write(bytes, 0, len);
+            }
+            outputStream.flush();
+            //关闭流
+            fileInputStream.close();
+            outputStream.close();
+            // 返回成功后删除文件
+            new File(filePath).delete();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

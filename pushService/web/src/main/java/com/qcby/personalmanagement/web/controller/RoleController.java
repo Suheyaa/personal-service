@@ -9,6 +9,7 @@ import com.qcby.personalmanagement.base.vo.BusinessVO;
 import com.qcby.personalmanagement.base.vo.RoleVO;
 import com.qcby.personalmanagement.web.param.RoleQueryParam;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.annotation.Resource;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
@@ -121,11 +123,11 @@ public class RoleController {
         return Result.getSuccessResult(roleService.listRole());
     }
     /**
-     * 出口
-     * 暂未完全实现
+     * 导出
+     *
      * @return {@link Result}<{@link List}<{@link BusinessVO}>>
      */
-    @RequestMapping("/export")
+    @PostMapping("/export")
     public void export(@RequestBody List<Long> ids, HttpServletResponse response) throws IOException {
         System.out.println(ids);
         String filePath = roleService.export(ids);
@@ -147,6 +149,8 @@ public class RoleController {
             //关闭流
             fileInputStream.close();
             outputStream.close();
+            // 返回成功后删除文件
+            new File(filePath).delete();
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,6 +1,7 @@
 package com.qcby.personalmanagement.base.service.impl;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -8,18 +9,28 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qcby.personalmanagement.base.dto.BusinessDTO;
 import com.qcby.personalmanagement.base.mapper.BusinessMapper;
 import com.qcby.personalmanagement.base.po.BusinessPO;
+import com.qcby.personalmanagement.base.po.RoleBusinessPO;
+import com.qcby.personalmanagement.base.po.RolePO;
 import com.qcby.personalmanagement.base.service.IBusinessService;
+import com.qcby.personalmanagement.base.vo.BusinessExcelVO;
 import com.qcby.personalmanagement.base.vo.BusinessVO;
+import com.qcby.personalmanagement.base.vo.RoleExcelVO;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class BusinessServiceImpl extends ServiceImpl<BusinessMapper, BusinessPO> implements IBusinessService {
-
+    String path="E:\\src\\";
 
     @Override
     public Integer insert(BusinessDTO businessDTO) {
@@ -73,5 +84,31 @@ public class BusinessServiceImpl extends ServiceImpl<BusinessMapper, BusinessPO>
             BeanUtils.copyProperties(businessPO, businessVO);
             return businessVO;
         }).getRecords();
+    }
+    @Override
+    public String export(List<Long> ids) throws IOException{
+        // 得到要导出的数据
+        ArrayList<BusinessExcelVO> arrayList = this.listByIds(ids).stream().map((e) -> {
+            BusinessExcelVO businessExcelVO = new BusinessExcelVO();
+            BeanUtils.copyProperties(e, businessExcelVO);
+            return businessExcelVO;
+        }).collect(Collectors.toCollection(ArrayList::new));
+
+
+        // 导出数据
+        // 生成路径及文件名
+        String fileName = path + System.currentTimeMillis() + ".xlsx";
+        // 判断父路径文件夹是否存在，不存在则创建
+        File file = new File(fileName);
+        File parentDir = file.getParentFile();
+        if (!parentDir.exists()) {
+            parentDir.mkdirs();
+        }
+        // 判断文件是否存在，不存在则创建
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        EasyExcel.write(fileName, BusinessExcelVO.class).sheet("业务").doWrite(arrayList);
+        return fileName;
     }
 }

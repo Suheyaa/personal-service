@@ -13,12 +13,10 @@ import com.qcby.personalmanagement.base.mapper.RoleMapper;
 import com.qcby.personalmanagement.base.po.RoleBusinessPO;
 import com.qcby.personalmanagement.base.po.RolePO;
 import com.qcby.personalmanagement.base.service.IRoleService;
-import com.qcby.personalmanagement.base.service.RoleBusinessService;
+import com.qcby.personalmanagement.base.service.IRoleBusinessService;
 import com.qcby.personalmanagement.base.vo.RoleExcelVO;
 import com.qcby.personalmanagement.base.vo.RoleVO;
-import org.junit.Test;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -32,7 +30,7 @@ import java.util.stream.Collectors;
 @Service
 public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements IRoleService {
     @Resource
-    private RoleBusinessService roleBusinessService;
+    private IRoleBusinessService roleBusinessService;
     String path="E:\\src\\";
 
     @Override
@@ -235,7 +233,7 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements 
         if (!file.exists()) {
             file.createNewFile();
         }
-        EasyExcel.write(fileName, RoleExcelVO.class).sheet("模板").doWrite(arrayList);
+        EasyExcel.write(fileName, RoleExcelVO.class).sheet("角色").doWrite(arrayList);
         return fileName;
     }
 }

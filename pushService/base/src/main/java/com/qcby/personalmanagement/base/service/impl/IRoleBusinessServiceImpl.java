@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qcby.personalmanagement.base.mapper.RoleBusinessMapper;
 import com.qcby.personalmanagement.base.po.RoleBusinessPO;
-import com.qcby.personalmanagement.base.service.RoleBusinessService;
+import com.qcby.personalmanagement.base.service.IRoleBusinessService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class RoleBusinessServiceImpl extends ServiceImpl<RoleBusinessMapper, RoleBusinessPO> implements RoleBusinessService {
+public class IRoleBusinessServiceImpl extends ServiceImpl<RoleBusinessMapper, RoleBusinessPO> implements IRoleBusinessService {
 
     @Resource
     RoleBusinessMapper roleBusinessMapper;

@@ -1,40 +1,42 @@
 package com.qcby.personalmanagement.base.vo;
 
-import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.alibaba.excel.annotation.format.DateTimeFormat;
-import com.alibaba.excel.annotation.write.style.*;
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
+import com.alibaba.excel.annotation.write.style.ContentRowHeight;
+import com.alibaba.excel.annotation.write.style.ContentStyle;
+import com.alibaba.excel.annotation.write.style.HeadRowHeight;
 import com.alibaba.excel.enums.poi.HorizontalAlignmentEnum;
 import com.alibaba.excel.enums.poi.VerticalAlignmentEnum;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.List;
-
-/**
- * 用于导出excel
- *
- * @author 张吉祥
- * @date 2023/07/11
- */
 @ContentRowHeight(30)
 @HeadRowHeight(20)
 @ColumnWidth(25)
 @ContentStyle(horizontalAlignment = HorizontalAlignmentEnum.CENTER, verticalAlignment =  VerticalAlignmentEnum.CENTER)
 @Data
-public class RoleExcelVO {
+public class BusinessExcelVO {
+
     private static final long serialVersionUID = 1L;
+
     /**
-     * 角色id
+     * 主键
      */
     @ExcelProperty(value = "id")
+
     private Long id;
 
     /**
-     * 角色名称
+     * 是否可用#0:禁用#1:启用
      */
-    @ExcelProperty(value = "角色名称")
-    private String roleName;
+    @ExcelProperty(value = "是否可用")
+    private Integer status;
+
+    /**
+     * 系统名称
+     */
+    @ExcelProperty(value = "系统名称")
+    private String businessName;
 
     /**
      * 权限字符
@@ -43,26 +45,20 @@ public class RoleExcelVO {
     private String permission;
 
     /**
-     * 角色状态(0停用，1正常)
+     * 路由地址
      */
-    @ExcelProperty(value = "角色状态")
-    private Integer status;
+    @ExcelProperty(value = "路由地址")
+    private String path;
 
     /**
-     * 备注
+     * 图标
      */
-    @ExcelProperty(value = "备注")
-    private String remark;
+    @ExcelProperty(value = "图标")
+    private String icon;
+
     /**
      * 创建时间
      */
-    @DateTimeFormat("yyyy年MM月dd日HH时mm分ss秒")
     @ExcelProperty(value = "创建时间")
     private LocalDateTime createTime;
-
-    /**
-     * 可用业务id
-     */
-    private String ids;
-
 }
