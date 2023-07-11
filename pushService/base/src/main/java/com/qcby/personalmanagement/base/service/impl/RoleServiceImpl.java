@@ -1,5 +1,7 @@
 package com.qcby.personalmanagement.base.service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
+import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.alibaba.excel.EasyExcel;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -215,7 +217,9 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, RolePO> implements 
         ArrayList<RoleExcelVO> arrayList = rolePOS.stream().map(po -> {
             RoleExcelVO roleVO = new RoleExcelVO();
             BeanUtils.copyProperties(po, roleVO);
-            roleVO.setIds(map.get(po.getId()).toString());
+            List<Long> list = map.get(po.getId());
+            String businessIds = CollectionUtil.isEmpty(list) ? "当前角色无任何权限" : list.toString();
+            roleVO.setIds(businessIds);
             return roleVO;
         }).collect(Collectors.toCollection(ArrayList::new));
         System.out.println(arrayList);
