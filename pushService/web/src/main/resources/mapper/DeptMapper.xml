@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.qcby.personalmanagement.base.mapper.DeptMapper">
+    
+    <select id="userByDeptid" parameterType="Long" resultType="int">
+        SELECT COUNT(*) FROM sys_user u WHERE u.dept_id = #{id}
+    </select>
+
+    <select id="selectDeptById" resultType="com.qcby.personalmanagement.base.vo.DeptVO">
+        SELECT
+            d.dept_name,
+            d.leader_id,
+            d.dept_status,
+            d.superior_id,
+            d.order_num,
+            u.user_name,
+            u.phone,
+            u.email
+        FROM
+            sys_dept AS d
+                LEFT JOIN
+            sys_user AS u
+            ON
+                d.leader_id = u.id
+        WHERE
+            d.id = #{id}
+    </select>
+
+</mapper>
