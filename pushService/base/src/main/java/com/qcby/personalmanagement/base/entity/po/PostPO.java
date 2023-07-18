@@ -34,10 +34,10 @@ public class PostPO {
     private LocalDateTime updateTime;
 
     @TableField(fill = FieldFill.INSERT)
-    private String createBy;
+    private String createdBy;
 
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private String updateBy;
+    private String updatedBy;
 
 
     @TableLogic

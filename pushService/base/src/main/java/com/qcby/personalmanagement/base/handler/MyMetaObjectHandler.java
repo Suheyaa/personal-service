@@ -23,8 +23,8 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         log.info("start insert fill ....");
         this.strictInsertFill(metaObject, "createTime", LocalDateTime.class, LocalDateTime.now());
         this.strictInsertFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
-        this.strictInsertFill(metaObject, "createBy", String.class, "admin");
-        this.strictInsertFill(metaObject, "updateBy", String.class, "admin");
+        this.strictInsertFill(metaObject, "createdBy", String.class, "admin");
+        this.strictInsertFill(metaObject, "updatedBy", String.class, "admin");
     }
 
 
@@ -32,7 +32,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
     public void updateFill(MetaObject metaObject) {
         log.info("start update fill ....");
         this.strictUpdateFill(metaObject, "updateTime", LocalDateTime.class, LocalDateTime.now());
-        this.strictUpdateFill(metaObject, "updateBy", String.class, "admin");
+        this.strictUpdateFill(metaObject, "updatedBy", String.class, "admin");
 
     }
 }

@@ -3,13 +3,13 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>pushService</artifactId>
+        <artifactId>personService</artifactId>
         <groupId>com.qcby</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>push-service-base</artifactId>
+    <artifactId>person-service-base</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -19,7 +19,7 @@
     <dependencies>
         <dependency>
             <groupId>com.qcby</groupId>
-            <artifactId>push-service-common</artifactId>
+            <artifactId>person-service-common</artifactId>
         </dependency>
         <dependency>
             <groupId>com.qcby</groupId>
