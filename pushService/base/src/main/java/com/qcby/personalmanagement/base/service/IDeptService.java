@@ -51,4 +51,10 @@ public interface IDeptService extends IService<DeptPO> {
      */
     public DeptVO selectDeptById(Long id);
 
+    /**
+     * 添加部门时查询用户信息
+     * @return
+     */
+    public List<DeptVO> userList();
+
 }

@@ -77,8 +77,8 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
         LambdaQueryWrapper<DeptPO> lqw = new LambdaQueryWrapper<DeptPO>()
                 .eq(DeptPO::getSuperiorId,deptPO1.getSuperiorId())
                 .eq(DeptPO::getDeptName,deptPO1.getDeptName());
-        DeptPO deptPO2 = this.getBaseMapper().selectOne(lqw);
-        if(ObjectUtil.isNotNull(deptPO2)){
+        List list = this.getBaseMapper().selectList(lqw);
+        if (list.size() != 0) {
             throw new ServiceException("500","部门名称已存在");
         }
         if(deptPO1.getId().equals(deptPO1.getSuperiorId())){
@@ -118,6 +118,11 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
     public DeptVO selectDeptById(Long id) {
         DeptVO deptVO = deptMapper.selectDeptById(id);
         return deptVO;
+    }
+
+    @Override
+    public List<DeptVO> userList() {
+        return deptMapper.userList();
     }
 
 

@@ -1,5 +1,6 @@
 package com.qcby.personalmanagement.web.controller;
 
+import com.baomidou.mybatisplus.extension.api.R;
 import com.qcby.framework.common.pojo.Result;
 import com.qcby.personalmanagement.base.dto.DeptDTO;
 import com.qcby.personalmanagement.base.service.IDeptService;
@@ -44,6 +45,11 @@ public class DeptController {
     @GetMapping("/selectDeptById")
     public Result<DeptVO> selectDeptById(Long id){
         return Result.getSuccessResult(deptService.selectDeptById(id));
+    }
+
+    @GetMapping("/userList")
+    public Result<List<DeptVO>> userList(){
+        return Result.getSuccessResult(deptService.userList());
     }
 
 }

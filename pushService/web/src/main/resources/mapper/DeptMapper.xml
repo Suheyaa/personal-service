@@ -28,4 +28,13 @@
             d.id = #{id}
     </select>
 
+    <select id="userList" resultType="com.qcby.personalmanagement.base.vo.DeptVO">
+        SELECT
+            u.user_name,
+            u.phone,
+            u.email
+        FROM
+            sys_user AS u
+    </select>
+
 </mapper>
