@@ -14,6 +14,7 @@ import com.qcby.personalmanagement.base.service.IDeptService;
 import com.qcby.personalmanagement.base.vo.DeptVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +27,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
     private DeptMapper deptMapper;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer insert(DeptDTO deptDTO) {
         DeptPO deptPO1 = BeanUtil.copyProperties(deptDTO, DeptPO.class);
         LambdaQueryWrapper<DeptPO> lqw = new LambdaQueryWrapper<DeptPO>()
@@ -47,6 +49,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer delete(Long id) {
         LambdaQueryWrapper<DeptPO> lqw = new LambdaQueryWrapper<DeptPO>().eq(DeptPO::getSuperiorId,id);
         List list = this.getBaseMapper().selectList(lqw);
@@ -62,11 +65,13 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer userByDeptid(long id) {
         return deptMapper.userByDeptid(id);
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public Integer update(DeptDTO deptDTO) {
         DeptPO deptPO1 = BeanUtil.copyProperties(deptDTO, DeptPO.class);
         LambdaQueryWrapper<DeptPO> lqw = new LambdaQueryWrapper<DeptPO>()
@@ -91,6 +96,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public List<DeptVO> list(DeptDTO deptDTO) {
         LambdaQueryWrapper<DeptPO> queryWrapper = new LambdaQueryWrapper<DeptPO>();
         if(ObjectUtil.isNotNull(deptDTO.getDeptName())){
@@ -108,6 +114,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public DeptVO selectDeptById(Long id) {
         DeptVO deptVO = deptMapper.selectDeptById(id);
         return deptVO;
