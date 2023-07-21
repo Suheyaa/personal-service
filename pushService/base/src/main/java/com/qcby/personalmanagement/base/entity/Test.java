@@ -1,9 +1,9 @@
 package com.qcby.personalmanagement.base.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
+
+import java.time.LocalDateTime;
 
 /**
  * @BelongsProject: pushService
@@ -14,10 +14,20 @@ import lombok.Data;
  */
 
 @Data
-@TableName("t_test")
+@TableName("test")
 public class Test {
     @TableId(type=IdType.ASSIGN_ID)
     private Long id;
 
-    private String name;
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
+
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateTime;
+
+    @TableField(fill = FieldFill.INSERT)
+    private String createdBy;
+
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private String updatedBy;
 }
