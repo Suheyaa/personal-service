@@ -17,7 +17,7 @@ public class DeptDTO {
     /**
      * 负责人id
      */
-    private Integer leaderId;
+    private Long leaderId;
 
     /**
      * 部门状态
@@ -28,7 +28,7 @@ public class DeptDTO {
     /**
      * 上级部门id
      */
-    private Integer superiorId;
+    private Long superiorId;
 
 
     /**

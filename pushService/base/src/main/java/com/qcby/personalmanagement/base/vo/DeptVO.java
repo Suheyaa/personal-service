@@ -24,7 +24,7 @@ public class DeptVO {
     /**
      * 上级部门id
      */
-    private Integer superiorId;
+    private Long superiorId;
 
     /**
      * 顺序
@@ -35,6 +35,11 @@ public class DeptVO {
      * 创建时间
      */
     private LocalDateTime createTime;
+
+    /**
+     * 负责人id
+     */
+    private Long leaderId;
 
     /**
      * 负责人

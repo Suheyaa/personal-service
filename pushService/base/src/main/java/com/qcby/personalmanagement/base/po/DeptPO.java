@@ -28,7 +28,7 @@ public class DeptPO implements Serializable {
     /**
      * 负责人id
      */
-    private Integer leaderId;
+    private Long leaderId;
 
     /**
      * 部门状态
@@ -39,7 +39,7 @@ public class DeptPO implements Serializable {
     /**
      * 上级部门id
      */
-    private Integer superiorId;
+    private Long superiorId;
 
 
     /**
