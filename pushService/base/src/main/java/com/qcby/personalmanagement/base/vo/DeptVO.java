@@ -34,6 +34,11 @@ public class DeptVO {
     private Integer orderNum;
 
     /**
+     * 祖级列表
+     */
+    private String ancestors;
+
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;

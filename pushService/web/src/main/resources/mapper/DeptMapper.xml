@@ -14,6 +14,7 @@
             d.leader_id,
             d.dept_status,
             d.superior_id,
+            d.ancestors,
             d.order_num,
             u.user_name,
             u.phone,

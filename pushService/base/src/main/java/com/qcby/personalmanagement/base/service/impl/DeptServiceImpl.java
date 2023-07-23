@@ -34,16 +34,19 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
                 .eq(DeptPO::getSuperiorId,deptPO1.getSuperiorId())
                 .eq(DeptPO::getDeptName,deptPO1.getDeptName());
         DeptPO deptPO2 = this.getBaseMapper().selectOne(lqw);
+        DeptVO deptVO = deptMapper.selectDeptById(deptPO1.getSuperiorId());
+        System.out.println(deptVO);
         if (ObjectUtil.isNotNull(deptPO2)){
             throw new ServiceException("500","该部门已存在");
         }
         DeptPO deptPO = new DeptPO();
-        deptPO.setDeptName(deptDTO.getDeptName());
-        deptPO.setLeaderId(deptDTO.getLeaderId());
-        deptPO.setDeptStatus(deptDTO.getDeptStatus());
-        deptPO.setAncestors(deptDTO.getAncestors());
-        deptPO.setSuperiorId(deptDTO.getSuperiorId());
-        deptPO.setOrderNum(deptDTO.getOrderNum());
+        deptPO.setDeptName(deptPO1.getDeptName());
+        deptPO.setLeaderId(deptPO1.getLeaderId());
+        deptPO.setDeptStatus(deptPO1.getDeptStatus());
+        deptPO.setAncestors(deptPO1.getAncestors());
+        deptPO.setSuperiorId(deptPO1.getSuperiorId());
+        deptPO.setOrderNum(deptPO1.getOrderNum());
+        deptPO.setAncestors(deptVO.getAncestors() + "," + deptPO1.getSuperiorId());
         return this.getBaseMapper().insert(deptPO);
 
     }
@@ -86,12 +89,11 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
         }
         DeptPO deptPO = new DeptPO();
         deptPO.setId(deptDTO.getId());
-        deptPO.setDeptName(deptDTO.getDeptName());
-        deptPO.setLeaderId(deptDTO.getLeaderId());
-        deptPO.setDeptStatus(deptDTO.getDeptStatus());
-        deptPO.setAncestors(deptDTO.getAncestors());
-        deptPO.setSuperiorId(deptDTO.getSuperiorId());
-        deptPO.setOrderNum(deptDTO.getOrderNum());
+        deptPO.setDeptName(deptPO1.getDeptName());
+        deptPO.setLeaderId(deptPO1.getLeaderId());
+        deptPO.setDeptStatus(deptPO1.getDeptStatus());
+        deptPO.setSuperiorId(deptPO1.getSuperiorId());
+        deptPO.setOrderNum(deptPO1.getOrderNum());
         return this.getBaseMapper().updateById(deptPO);
     }
 
