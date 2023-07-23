@@ -57,4 +57,9 @@ public interface IDeptService extends IService<DeptPO> {
      */
     public List<DeptVO> userList();
 
+    /**
+    *构建部门树
+    * */
+    public DeptVO buildDeptTree();
+
 }

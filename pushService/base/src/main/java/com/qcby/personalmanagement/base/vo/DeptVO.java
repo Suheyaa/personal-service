@@ -3,6 +3,8 @@ package com.qcby.personalmanagement.base.vo;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 @Data
 public class DeptVO {
     /**
@@ -56,4 +58,8 @@ public class DeptVO {
      */
     private String email;
 
+    /**
+     * 子级部门
+     */
+    private List<DeptVO>children;
 }

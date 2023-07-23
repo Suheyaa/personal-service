@@ -2,9 +2,9 @@ package com.qcby.personalmanagement.base.service.impl;
 
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.qcby.framework.common.exception.ServiceException;
 import com.qcby.personalmanagement.base.dto.DeptDTO;
@@ -113,6 +113,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
         return deptVOS;
     }
 
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public DeptVO selectDeptById(Long id) {
@@ -123,6 +124,41 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
     @Override
     public List<DeptVO> userList() {
         return deptMapper.userList();
+    }
+
+    @Override
+    public DeptVO buildDeptTree() {
+        LambdaQueryWrapper<DeptPO> lambdaQueryWrapper = new LambdaQueryWrapper<DeptPO>()
+                .eq(DeptPO::getSuperiorId,0);
+        DeptPO deptPO = deptMapper.selectOne(lambdaQueryWrapper);
+        DeptVO deptVO = BeanUtil.copyProperties(deptPO, DeptVO.class);
+        buildChildren(deptVO);
+
+        return deptVO;
+    }
+
+    public void buildChildren(DeptVO superDept){
+        List<DeptVO>deptVOS = new ArrayList<>();
+        //查询条件
+        LambdaQueryWrapper<DeptPO>lambdaQueryWrapper = new LambdaQueryWrapper<DeptPO>()
+                .eq(DeptPO::getSuperiorId,superDept.getId());
+        //查询上级部门对应的所有子集部门
+        List<DeptPO> deptPOS = deptMapper.selectList(lambdaQueryWrapper);
+        //查询结果为null
+        if(CollectionUtil.isEmpty(deptPOS)){
+            return ;
+        }
+        //将查询结果转成VO装进deptVOS
+        for(DeptPO deptPO: deptPOS){
+            DeptVO deptVO = BeanUtil.copyProperties(deptPO, DeptVO.class);
+            deptVOS.add(deptVO);
+        }
+        //将子级部门赋给上级部门
+        superDept.setChildren(deptVOS);
+        //查询该子级部门的子级部门
+        for(DeptVO deptVO :deptVOS){
+            buildChildren(deptVO);
+        }
     }
 
 

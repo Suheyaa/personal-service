@@ -52,4 +52,8 @@ public class DeptController {
         return Result.getSuccessResult(deptService.userList());
     }
 
+    @GetMapping("/getDeptTree")
+    public Result<DeptVO> getDeptTree(){
+        return Result.getSuccessResult(deptService.buildDeptTree());
+    }
 }
