@@ -59,6 +59,10 @@
             <groupId>com.qcby</groupId>
             <artifactId>person-service-base</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>easyexcel-core</artifactId>
+        </dependency>
     </dependencies>
 
 
