@@ -33,11 +33,17 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
         LambdaQueryWrapper<DeptPO> lqw = new LambdaQueryWrapper<DeptPO>()
                 .eq(DeptPO::getSuperiorId,deptPO1.getSuperiorId())
                 .eq(DeptPO::getDeptName,deptPO1.getDeptName());
-        DeptPO deptPO2 = this.getBaseMapper().selectOne(lqw);
+        LambdaQueryWrapper<DeptPO> queryWrapper = new LambdaQueryWrapper<DeptPO>()
+                .eq(DeptPO::getSuperiorId,deptPO1.getSuperiorId())
+                .eq(DeptPO::getOrderNum,deptPO1.getOrderNum());
         DeptVO deptVO = deptMapper.selectDeptById(deptPO1.getSuperiorId());
-        System.out.println(deptVO);
+        DeptPO deptPO2 = this.getBaseMapper().selectOne(lqw);
+        DeptPO deptPO3 = this.getBaseMapper().selectOne(queryWrapper);
         if (ObjectUtil.isNotNull(deptPO2)){
             throw new ServiceException("500","该部门已存在");
+        }
+        if (ObjectUtil.isNotNull(deptPO3)){
+            throw new ServiceException("500","该排序已存在部门");
         }
         DeptPO deptPO = new DeptPO();
         deptPO.setDeptName(deptPO1.getDeptName());
@@ -77,15 +83,25 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
     @Transactional(rollbackFor = Exception.class)
     public Integer update(DeptDTO deptDTO) {
         DeptPO deptPO1 = BeanUtil.copyProperties(deptDTO, DeptPO.class);
+        DeptVO deptVO = deptMapper.selectDeptById(deptPO1.getSuperiorId());
         LambdaQueryWrapper<DeptPO> lqw = new LambdaQueryWrapper<DeptPO>()
                 .eq(DeptPO::getSuperiorId,deptPO1.getSuperiorId())
-                .eq(DeptPO::getDeptName,deptPO1.getDeptName());
-        List list = this.getBaseMapper().selectList(lqw);
-        if (list.size() != 0) {
-            throw new ServiceException("500","部门名称已存在");
-        }
+                .eq(DeptPO::getDeptName,deptPO1.getDeptName())
+                .ne(DeptPO::getId,deptPO1.getId());
+        LambdaQueryWrapper<DeptPO> queryWrapper = new LambdaQueryWrapper<DeptPO>()
+                .eq(DeptPO::getSuperiorId,deptPO1.getSuperiorId())
+                .eq(DeptPO::getOrderNum,deptPO1.getOrderNum())
+                .ne(DeptPO::getId,deptPO1.getId());
+        DeptPO deptPO2 = this.getBaseMapper().selectOne(lqw);
+        DeptPO deptPO3 = this.getBaseMapper().selectOne(queryWrapper);
         if(deptPO1.getId().equals(deptPO1.getSuperiorId())){
             throw new ServiceException("500","上级部门不能是自己");
+        }
+        if (ObjectUtil.isNotNull(deptPO2)){
+            throw new ServiceException("500","该部门已存在");
+        }
+        if (ObjectUtil.isNotNull(deptPO3)){
+            throw new ServiceException("500","该排序已存在部门");
         }
         DeptPO deptPO = new DeptPO();
         deptPO.setId(deptDTO.getId());
@@ -94,6 +110,7 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
         deptPO.setDeptStatus(deptPO1.getDeptStatus());
         deptPO.setSuperiorId(deptPO1.getSuperiorId());
         deptPO.setOrderNum(deptPO1.getOrderNum());
+        deptPO.setAncestors(deptVO.getAncestors() + "," + deptPO1.getSuperiorId());
         return this.getBaseMapper().updateById(deptPO);
     }
 
@@ -143,7 +160,8 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
         List<DeptVO>deptVOS = new ArrayList<>();
         //查询条件
         LambdaQueryWrapper<DeptPO>lambdaQueryWrapper = new LambdaQueryWrapper<DeptPO>()
-                .eq(DeptPO::getSuperiorId,superDept.getId());
+                .eq(DeptPO::getSuperiorId,superDept.getId())
+                .eq(DeptPO::getDeleteFlag,0);
         //查询上级部门对应的所有子集部门
         List<DeptPO> deptPOS = deptMapper.selectList(lambdaQueryWrapper);
         //查询结果为null
