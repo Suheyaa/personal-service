@@ -122,6 +122,9 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
             queryWrapper.like(DeptPO::getDeptName,deptDTO.getDeptName());
         }
         if(ObjectUtil.isNotNull(deptDTO.getDeptStatus())){
+            if(deptDTO.getDeptStatus()==1){
+                buildDeptTree();
+            }
             queryWrapper.eq(DeptPO::getDeptStatus,deptDTO.getDeptStatus());
         }
         queryWrapper.eq(DeptPO::getDeleteFlag, 0)
