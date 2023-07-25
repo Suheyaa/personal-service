@@ -12,7 +12,6 @@ public interface IBusinessService extends IService<BusinessPO> {
     public Integer insert(BusinessDTO businessDTO);
     public Integer delete(Long id);
     public Integer update(BusinessDTO businessDTO);
-
     List<BusinessVO> list(Integer pageIndex, Integer pageSize, BusinessDTO businessDTO);
     public String export(List<Long> ids) throws IOException;
 }
