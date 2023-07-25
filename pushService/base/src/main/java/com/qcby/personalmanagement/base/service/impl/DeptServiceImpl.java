@@ -122,9 +122,10 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
             queryWrapper.like(DeptPO::getDeptName,deptDTO.getDeptName());
         }
         if(ObjectUtil.isNotNull(deptDTO.getDeptStatus())){
-            if(deptDTO.getDeptStatus()==1){
-                buildDeptTree();
-            }
+//            if(deptDTO.getDeptStatus()==1){
+//                List<DeptVO> deptVOS = buildDeptTree();
+//                return deptVOS;
+//            }
             queryWrapper.eq(DeptPO::getDeptStatus,deptDTO.getDeptStatus());
         }
         queryWrapper.eq(DeptPO::getDeleteFlag, 0)
@@ -149,14 +150,16 @@ public class DeptServiceImpl extends ServiceImpl<DeptMapper, DeptPO> implements 
     }
 
     @Override
-    public DeptVO buildDeptTree() {
+    public List<DeptVO> buildDeptTree() {
         LambdaQueryWrapper<DeptPO> lambdaQueryWrapper = new LambdaQueryWrapper<DeptPO>()
                 .eq(DeptPO::getSuperiorId,0);
         DeptPO deptPO = deptMapper.selectOne(lambdaQueryWrapper);
         DeptVO deptVO = BeanUtil.copyProperties(deptPO, DeptVO.class);
         buildChildren(deptVO);
+        List<DeptVO> deptVOS = new ArrayList<>();
+        deptVOS.add(deptVO);
 
-        return deptVO;
+        return deptVOS;
     }
 
     public void buildChildren(DeptVO superDept){

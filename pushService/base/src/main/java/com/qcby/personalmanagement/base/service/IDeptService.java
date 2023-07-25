@@ -60,6 +60,6 @@ public interface IDeptService extends IService<DeptPO> {
     /**
     *构建部门树
     * */
-    public DeptVO buildDeptTree();
+    public List<DeptVO> buildDeptTree();
 
 }

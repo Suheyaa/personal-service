@@ -53,7 +53,7 @@ public class DeptController {
     }
 
     @GetMapping("/getDeptTree")
-    public Result<DeptVO> getDeptTree(){
+    public Result<List<DeptVO>> getDeptTree(){
         return Result.getSuccessResult(deptService.buildDeptTree());
     }
 }
