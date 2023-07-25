@@ -166,19 +166,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
 
         //查询出所有的post放入hashmap中
         List<PostPO> postPOS = postMapper.selectList(new LambdaQueryWrapper<PostPO>()
-                .select(PostPO::getId,PostPO::getPostName,PostPO::getStatus));
+                .select(PostPO::getId,PostPO::getPostName));
         System.out.println("postPOS"+postPOS);
         postRole.put("post",postPOS);
 
         //查询出所有的role放入hashmap中
         List<RolePO> rolePOS = roleMapper.selectList(new LambdaQueryWrapper<RolePO>()
-                .select(RolePO::getId,RolePO::getRoleName,RolePO::getStatus));
+                .select(RolePO::getId,RolePO::getRoleName));
 
         postRole.put("role",rolePOS);
         //将hashmap放入userPostRoleVO
         userPostRoleVO.setPostRole(postRole);
         //判断有没有传过来id
-        if( ObjectUtil.isNull(userQuery.getId())) {
+        if( ObjectUtil.isNull(userQuery)) {
             return userPostRoleVO;
         } else
         {
@@ -247,7 +247,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
                     baseMapper.insert(userPO);
                     userVO.setId(userPO.getId());
                     //将postId存进user-post表中
-                    if(!userVO.getPostName().isEmpty()){
+                    if(BeanUtil.isNotEmpty(userVO.getPostName())){
                         String[] name = userVO.getPostName().split(",");
                         List<Long> postIds = postMapper.selectList(new LambdaQueryWrapper<PostPO>()
                                         .select(PostPO::getId)
@@ -372,7 +372,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         try {
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
             response.setCharacterEncoding("utf-8");
-            String fileName = URLEncoder.encode("用户表", "UTF-8");
+            String fileName = URLEncoder.encode("用户表模板", "UTF-8");
             //.replaceAll("\+", "20");
             response.setHeader("Content-disposition", "attachment;filename*=utf-8''" + fileName + ".xlsx");
 
@@ -385,7 +385,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
             //导出excel
             EasyExcel.write(response.getOutputStream(),UserVO.class)
                     .excelType(ExcelTypeEnum.XLSX)
-                    .sheet("用户表")
+                    .sheet("用户表模板")
                     .doWrite(userList);
         } catch (IOException e) {
             throw new RuntimeException(e);

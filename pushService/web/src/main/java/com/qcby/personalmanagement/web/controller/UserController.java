@@ -83,8 +83,8 @@ public class UserController {
      * 导入
      */
     @PostMapping("/import")
-    public Result<Boolean> importUser(MultipartFile file){
-        return Result.getSuccessResult(userService.importUser(file));
+    public Result<String> importUser(MultipartFile file){
+        return Result.getSuccessResult(userService.importUser(file).equals(Boolean.TRUE) ? "导入成功" : "导入失败");
     }
     /**
      * 下载导入导出的excel
